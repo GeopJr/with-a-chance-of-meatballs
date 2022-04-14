@@ -114,9 +114,12 @@ const main = async () => {
             proxied: rec?.proxied ?? true,
           };
 
+          if (!["A", "AAAA", "CNAME"].includes(rec.type.toUpperCase())) {
+            result["proxied"] = false; // Cannot be proxied
+          }
+
           if (rec.type === "MX") {
             result["priority"] = rec.priority ?? 10;
-            result["proxied"] = false; // Cannot be proxied
           }
 
           await cf.dnsRecords.add(zoneId, result);
